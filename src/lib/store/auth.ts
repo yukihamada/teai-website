@@ -28,6 +28,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         error: error instanceof Error ? error.message : 'Login failed',
         isLoading: false,
       });
+      throw error;
     }
   },
 
@@ -46,6 +47,7 @@ export const useAuthStore = create<AuthState>((set) => ({
         error: error instanceof Error ? error.message : 'Failed to fetch user',
         isLoading: false,
       });
+      throw error;
     }
   },
 }));
