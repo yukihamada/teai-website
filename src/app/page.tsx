@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
 
 const features = [
@@ -298,5 +297,5 @@ my-app   Running   https://my-app.teai.io
         </div>
       </div>
     </div>
-  )
+  );
 }
