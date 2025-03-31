@@ -64,6 +64,12 @@ export const api = {
   billing: {
     getUsageCosts: () =>
       apiClient.get<UsageCosts>('/billing/usage-costs'),
+    createCheckoutSession: (data: {
+      planId: string;
+      successUrl: string;
+      cancelUrl: string;
+    }) =>
+      apiClient.post<{ sessionId: string }>('/billing/create-checkout-session', data),
     createSubscription: (planId: string, paymentMethodId: string) =>
       apiClient.post('/billing/subscribe', {
         plan_id: planId,
@@ -73,6 +79,8 @@ export const api = {
       apiClient.patch(`/billing/subscriptions/${subscriptionId}`, {
         plan_id: planId,
       }),
+    getPortalSession: () =>
+      apiClient.post<{ url: string }>('/billing/create-portal-session'),
   },
 
   // 監視
