@@ -5,11 +5,11 @@ export async function POST(request: Request) {
   try {
     const { email, password, fullName } = await request.json();
 
-    const response = await api.auth.register({
+    const response = await api.auth.register(
       email,
       password,
-      fullName,
-    });
+      fullName
+    );
 
     return NextResponse.json(response.data);
   } catch (error) {

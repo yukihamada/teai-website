@@ -88,15 +88,15 @@ const plans = [
 
 export default function Home() {
   return (
-    <div className="bg-white">
+    <div className="bg-white dark:bg-gray-900">
       {/* Hero section */}
-      <div className="relative isolate overflow-hidden bg-gradient-to-b from-indigo-100/20 pt-14">
+      <div className="relative isolate overflow-hidden bg-gradient-to-b from-indigo-100/20 dark:from-indigo-950/20 pt-14">
         <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:flex lg:items-center lg:gap-x-10 lg:px-8 lg:py-40">
           <div className="mx-auto max-w-2xl lg:mx-0 lg:flex-auto">
             <div className="flex">
-              <div className="relative flex items-center gap-x-4 rounded-full px-4 py-1 text-sm leading-6 text-gray-600 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-                <span className="font-semibold text-indigo-600">新登場</span>
-                <span className="h-4 w-px bg-gray-900/10" aria-hidden="true" />
+              <div className="relative flex items-center gap-x-4 rounded-full px-4 py-1 text-sm leading-6 text-gray-600 dark:text-gray-300 ring-1 ring-gray-900/10 dark:ring-gray-100/10 hover:ring-gray-900/20 dark:hover:ring-gray-100/20">
+                <span className="font-semibold text-indigo-600 dark:text-indigo-400">新登場</span>
+                <span className="h-4 w-px bg-gray-900/10 dark:bg-gray-100/10" aria-hidden="true" />
                 <a href="#" className="flex items-center gap-x-1">
                   <span className="absolute inset-0" aria-hidden="true" />
                   プレビュー版を試す
@@ -104,12 +104,12 @@ export default function Home() {
                 </a>
               </div>
             </div>
-            <h1 className="mt-10 max-w-lg text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+            <h1 className="mt-10 max-w-lg text-4xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-6xl">
               OpenHandsを
               <br />
               クラウドで簡単に
             </h1>
-            <p className="mt-6 text-lg leading-8 text-gray-600">
+            <p className="mt-6 text-lg leading-8 text-gray-600 dark:text-gray-300">
               TeAI.ioは、OpenHandsのホスティングサービスを提供します。
               インフラ管理から解放され、AIアプリケーションの開発に集中できます。
             </p>
@@ -130,15 +130,15 @@ export default function Home() {
               <div className="absolute -top-8 -left-8 w-72 h-72 bg-indigo-50 rounded-full mix-blend-multiply opacity-70 animate-blob" />
               <div className="absolute -bottom-8 -right-8 w-72 h-72 bg-indigo-100 rounded-full mix-blend-multiply opacity-70 animate-blob animation-delay-2000" />
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-tr from-indigo-50 to-indigo-100 shadow-2xl" />
-              <div className="relative rounded-2xl bg-[#1a1b26] overflow-hidden">
-                <div className="flex bg-[#24283b] px-4 py-2 items-center gap-2">
+              <div className="relative rounded-2xl bg-[#1a1b26] dark:bg-[#0d0d0d] overflow-hidden">
+                <div className="flex bg-[#24283b] dark:bg-[#1a1a1a] px-4 py-2 items-center gap-2">
                   <div className="w-3 h-3 rounded-full bg-red-500" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500" />
                   <div className="w-3 h-3 rounded-full bg-green-500" />
                   <div className="ml-2 text-sm text-gray-400">Terminal</div>
                 </div>
                 <div className="p-4">
-                  <pre className="text-sm text-gray-300">
+                  <pre className="text-sm text-gray-300 dark:text-gray-200">
                     <code>{`$ teai create instance
 Creating new instance... ⚡️
 ✨ Instance "my-app" is ready!
