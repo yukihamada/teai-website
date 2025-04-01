@@ -1,0 +1,21 @@
+{
+  "name": "TeAI - AI開発者のためのクラウドプラットフォーム",
+  "short_name": "TeAI",
+  "description": "TeAIは、AI開発者のためのクラウドプラットフォームです。AWSアカウントの自動作成、クレジット管理、インスタンス管理などの機能を提供します。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4FD1C5",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
