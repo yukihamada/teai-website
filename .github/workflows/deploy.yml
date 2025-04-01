@@ -27,15 +27,11 @@ jobs:
         run: npm run build
 
       - name: Deploy to Test
-        if: github.ref == 'refs/heads/main'
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        if: github.ref == 'refs/heads/master'
         run: |
-          npx vercel deploy --token ${VERCEL_TOKEN} --yes --prod --scope yukihamadas-projects --build-env NEXT_PUBLIC_ENV=preview
+          npx vercel deploy --token PObfDhj5Ybd3wGTF7yWLsarx --yes --prod --scope yukihamadas-projects --build-env NEXT_PUBLIC_ENV=preview
 
       - name: Deploy to Production
         if: github.ref == 'refs/heads/release'
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
         run: |
-          npx vercel deploy --token ${VERCEL_TOKEN} --yes --prod --scope yukihamadas-projects --build-env NEXT_PUBLIC_ENV=production
+          npx vercel deploy --token PObfDhj5Ybd3wGTF7yWLsarx --yes --prod --scope yukihamadas-projects --build-env NEXT_PUBLIC_ENV=production
