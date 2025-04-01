@@ -8,6 +8,7 @@ import { Bars3Icon, XMarkIcon, UserCircleIcon } from '@heroicons/react/24/outlin
 import { Logo } from './Logo';
 import { ThemeToggle } from './ThemeToggle';
 import { useAuth } from '@/hooks/useAuth';
+import { config, isProduction, isPreview } from '@/config/env';
 
 const navigation = [
   { name: 'ドキュメント', href: '/docs' },
@@ -53,6 +54,15 @@ export function Header() {
                 </div>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:items-center space-x-4">
+                {!isProduction && (
+                  <span className={`text-sm font-medium ${
+                    isPreview 
+                      ? 'text-yellow-600 dark:text-yellow-400'
+                      : 'text-green-600 dark:text-green-400'
+                  }`}>
+                    {isPreview ? 'テスト環境' : '開発環境'}
+                  </span>
+                )}
                 <ThemeToggle />
                 {isAuthenticated ? (
                   <Menu as="div" className="relative ml-3">
