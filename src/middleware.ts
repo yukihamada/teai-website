@@ -7,11 +7,9 @@ export async function middleware(request: NextRequest) {
   const isAuthPage = request.nextUrl.pathname.startsWith('/login') || 
                     request.nextUrl.pathname.startsWith('/register');
 
-  if (isAuthPage) {
-    if (token) {
-      return NextResponse.redirect(new URL('/dashboard', request.url));
-    }
-    return NextResponse.next();
+  // If user is authenticated and tries to access auth pages, redirect to dashboard
+  if (isAuthPage && token) {
+    return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   const isApiRoute = request.nextUrl.pathname.startsWith('/api');
@@ -20,11 +18,13 @@ export async function middleware(request: NextRequest) {
                        request.nextUrl.pathname.startsWith('/docs') ||
                        request.nextUrl.pathname.startsWith('/blog');
 
+  // Public routes and API routes don't require authentication
   if (isPublicRoute || isApiRoute) {
     return NextResponse.next();
   }
 
-  if (!token) {
+  // Protected routes require authentication
+  if (!token && !isAuthPage) {
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('callbackUrl', request.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
