@@ -1,18 +1,9 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { 
-  OrganizationsClient, 
-  CreateAccountCommand,
-} from "@aws-sdk/client-organizations";
+import { AWSOrganizationManager } from '@/lib/aws/organization';
 
 const prisma = new PrismaClient();
-const organizations = new OrganizationsClient({
-  region: "ap-northeast-1",
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || '',
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || '',
-  },
-});
+const awsOrgManager = new AWSOrganizationManager();
 
 export async function POST(request: Request) {
   try {
@@ -37,32 +28,27 @@ export async function POST(request: Request) {
     });
 
     // 3. AWS Organizations でアカウントを作成
-    const createAccountResponse = await organizations.send(
-      new CreateAccountCommand({
-        Email: email,
-        AccountName: `TeAI-${user.id}`,
-      })
+    const awsAccountId = await awsOrgManager.createNewAccount(
+      email,
+      `TeAI-${user.id}`,
+      user.id
     );
 
-    const awsAccountId = createAccountResponse.CreateAccountStatus?.AccountId;
+    // 4. AWSアカウント情報を保存
+    await prisma.aWSAccount.create({
+      data: {
+        userId: user.id,
+        awsAccountId,
+        accountName: `TeAI-${user.id}`,
+        status: 'active',
+      },
+    });
 
-    if (awsAccountId) {
-      // 4. AWSアカウント情報を保存
-      await prisma.aWSAccount.create({
-        data: {
-          userId: user.id,
-          awsAccountId: awsAccountId,
-          accountName: `TeAI-${user.id}`,
-          status: 'creating',
-        },
-      });
-
-      // ユーザーレコードを更新
-      await prisma.user.update({
-        where: { id: user.id },
-        data: { awsAccountId },
-      });
-    }
+    // 5. ユーザーレコードを更新
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { awsAccountId },
+    });
 
     return NextResponse.json({
       user,
