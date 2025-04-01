@@ -2,7 +2,7 @@
 
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
-import { SunIcon, MoonIcon, ComputerDesktopIcon } from '@heroicons/react/24/outline';
+import { SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -16,41 +16,21 @@ export function ThemeToggle() {
     return null;
   }
 
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
   return (
-    <div className="flex items-center gap-2 p-1 rounded-lg bg-gray-100 dark:bg-gray-800">
-      <button
-        onClick={() => setTheme('light')}
-        className={`p-2 rounded-md transition-colors ${
-          theme === 'light'
-            ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
-            : 'hover:bg-white/50 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-400'
-        }`}
-        title="ライトモード"
-      >
-        <SunIcon className="h-5 w-5" />
-      </button>
-      <button
-        onClick={() => setTheme('system')}
-        className={`p-2 rounded-md transition-colors ${
-          theme === 'system'
-            ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
-            : 'hover:bg-white/50 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-400'
-        }`}
-        title="システム設定に従う"
-      >
-        <ComputerDesktopIcon className="h-5 w-5" />
-      </button>
-      <button
-        onClick={() => setTheme('dark')}
-        className={`p-2 rounded-md transition-colors ${
-          theme === 'dark'
-            ? 'bg-white dark:bg-gray-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
-            : 'hover:bg-white/50 dark:hover:bg-gray-700/50 text-gray-600 dark:text-gray-400'
-        }`}
-        title="ダークモード"
-      >
-        <MoonIcon className="h-5 w-5" />
-      </button>
-    </div>
+    <button
+      onClick={toggleTheme}
+      className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+      title={theme === 'dark' ? 'ライトモードに切り替え' : 'ダークモードに切り替え'}
+    >
+      {theme === 'dark' ? (
+        <SunIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+      ) : (
+        <MoonIcon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+      )}
+    </button>
   );
 }
