@@ -1,59 +1,38 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { getToken } from 'next-auth/jwt';
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-// 認証が必要なパス
-const PROTECTED_PATHS = [
-  '/dashboard',
-  '/instances',
-  '/settings',
-]
+export async function middleware(request: NextRequest) {
+  const token = await getToken({ req: request });
+  const isAuthPage = request.nextUrl.pathname.startsWith('/login') || 
+                    request.nextUrl.pathname.startsWith('/register');
 
-// 未ログイン時にリダイレクトしないパス
-const PUBLIC_PATHS = [
-  '/',
-  '/login',
-  '/register',
-  '/docs',
-  '/contact',
-  '/api/auth/register',
-]
-
-export function middleware(request: NextRequest) {
-  const token = request.cookies.get('token')?.value
-  const path = request.nextUrl.pathname
-
-  // APIルートは個別に認証チェックを行う
-  if (path.startsWith('/api/') && !PUBLIC_PATHS.includes(path)) {
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      )
+  if (isAuthPage) {
+    if (token) {
+      return NextResponse.redirect(new URL('/dashboard', request.url));
     }
-    return NextResponse.next()
+    return NextResponse.next();
   }
 
-  // 保護されたパスへのアクセスをチェック
-  if (PROTECTED_PATHS.some(p => path.startsWith(p))) {
-    if (!token) {
-      const url = new URL('/login', request.url)
-      url.searchParams.set('redirect', path)
-      return NextResponse.redirect(url)
-    }
+  const isApiRoute = request.nextUrl.pathname.startsWith('/api');
+  const isPublicRoute = request.nextUrl.pathname === '/' || 
+                       request.nextUrl.pathname.startsWith('/legal') ||
+                       request.nextUrl.pathname.startsWith('/docs') ||
+                       request.nextUrl.pathname.startsWith('/blog');
+
+  if (isPublicRoute || isApiRoute) {
+    return NextResponse.next();
   }
 
-  return NextResponse.next()
+  if (!token) {
+    const loginUrl = new URL('/login', request.url);
+    loginUrl.searchParams.set('callbackUrl', request.nextUrl.pathname);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public (public files)
-     */
-    '/((?!_next/static|_next/image|favicon.ico|public).*)',
-  ],
-}
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
+};
