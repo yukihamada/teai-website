@@ -2,11 +2,11 @@
 
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { loadStripe } from '@stripe/stripe-js';
-import { api } from '@/lib/api/endpoints';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -39,29 +39,37 @@ export default function RegisterPage() {
       setError('');
 
       // 1. ユーザー登録
-      const registerResponse = await api.auth.register(
-        data.email,
-        data.password,
-        data.fullName
-      );
+      const registerResponse = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-      // 2. ログイン
-      await api.auth.login(data.email, data.password);
+      if (!registerResponse.ok) {
+        throw new Error('Registration failed');
+      }
 
-      // 3. Proプランの場合、Stripeチェックアウトを開始
+      // 2. Proプランの場合、Stripeチェックアウトを開始
       if (plan === 'pro') {
         const stripe = await stripePromise;
         if (!stripe) throw new Error('Stripe の読み込みに失敗しました');
 
-        const checkoutResponse = await api.billing.createCheckoutSession({
-          planId: 'pro',
-          successUrl: `${window.location.origin}/dashboard?checkout=success`,
-          cancelUrl: `${window.location.origin}/register?plan=pro`,
+        const checkoutResponse = await fetch('/api/billing/create-checkout-session', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            planId: 'pro',
+            successUrl: `${window.location.origin}/dashboard?checkout=success`,
+            cancelUrl: `${window.location.origin}/register?plan=pro`,
+          }),
         });
 
-        const { error } = await stripe.redirectToCheckout({
-          sessionId: checkoutResponse.data.sessionId,
-        });
+        const { sessionId } = await checkoutResponse.json();
+        const { error } = await stripe.redirectToCheckout({ sessionId });
 
         if (error) throw error;
       } else {
@@ -195,12 +203,12 @@ export default function RegisterPage() {
             </div>
 
             <div className="mt-6">
-              <a
+              <Link
                 href="/login"
                 className="flex w-full justify-center rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50"
               >
                 ログイン
-              </a>
+              </Link>
             </div>
           </div>
         </div>
