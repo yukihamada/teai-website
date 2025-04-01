@@ -1,34 +1,20 @@
 'use client';
 
+import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import { SunIcon, MoonIcon, ComputerDesktopIcon } from '@heroicons/react/24/outline';
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<'light' | 'dark' | 'system'>('system');
+  const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark' | 'system' | null;
-    if (savedTheme) {
-      setTheme(savedTheme);
-    }
   }, []);
 
-  useEffect(() => {
-    if (!mounted) return;
-
-    localStorage.setItem('theme', theme);
-
-    if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      document.documentElement.classList.toggle('dark', systemTheme === 'dark');
-    } else {
-      document.documentElement.classList.toggle('dark', theme === 'dark');
-    }
-  }, [theme, mounted]);
-
-  if (!mounted) return null;
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="flex items-center gap-2 p-1 rounded-lg bg-gray-100 dark:bg-gray-800">
