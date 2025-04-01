@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { PlusIcon, ServerIcon, CloudIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
+import { SecureConfigList } from '@/components/env/SecureConfigList';
 
 interface OpenHandsInstance {
   id: string;
@@ -21,9 +22,6 @@ interface AwsServer {
   region: string;
   ip: string;
 }
-
-// モックデータ
-const mockOpenHandsInstances: OpenHandsInstance[] = [];
 
 const mockAwsServers: AwsServer[] = [
   {
@@ -47,6 +45,7 @@ const mockAwsServers: AwsServer[] = [
 export default function DashboardPage() {
   const [openHandsInstances, setOpenHandsInstances] = useState<OpenHandsInstance[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [awsServers] = useState(mockAwsServers);
 
   useEffect(() => {
     const fetchInstances = async () => {
@@ -63,7 +62,6 @@ export default function DashboardPage() {
 
     fetchInstances();
   }, []);
-  const [awsServers] = useState(mockAwsServers);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0B1120] py-12">
@@ -97,7 +95,7 @@ export default function DashboardPage() {
                             },
                             body: JSON.stringify({
                               name: `instance-${Date.now()}`,
-                              type: 'basic', // デフォルトタイプ
+                              type: 'basic',
                             }),
                           });
 
@@ -190,6 +188,11 @@ export default function DashboardPage() {
                 </table>
               </div>
             </div>
+          </div>
+
+          {/* Environment Variables Section */}
+          <div>
+            <SecureConfigList />
           </div>
         </div>
       </div>
