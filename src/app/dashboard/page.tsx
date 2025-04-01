@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PlusIcon, ServerIcon, CloudIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 
@@ -45,7 +45,24 @@ const mockAwsServers: AwsServer[] = [
 ];
 
 export default function DashboardPage() {
-  const [openHandsInstances] = useState(mockOpenHandsInstances);
+  const [openHandsInstances, setOpenHandsInstances] = useState<OpenHandsInstance[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchInstances = async () => {
+      try {
+        const response = await fetch('/api/instances');
+        if (response.ok) {
+          const data = await response.json();
+          setOpenHandsInstances(data);
+        }
+      } catch (error) {
+        console.error('Failed to fetch instances:', error);
+      }
+    };
+
+    fetchInstances();
+  }, []);
   const [awsServers] = useState(mockAwsServers);
 
   return (
@@ -68,13 +85,41 @@ export default function DashboardPage() {
                     新しいインスタンスを作成して始めましょう
                   </p>
                   <div className="mt-6">
-                    <Link
-                      href="/instances/new"
+                    <button
+                      onClick={async () => {
+                        if (isLoading) return;
+                        setIsLoading(true);
+                        try {
+                          const response = await fetch('/api/instances', {
+                            method: 'POST',
+                            headers: {
+                              'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                              name: `instance-${Date.now()}`,
+                              type: 'basic', // デフォルトタイプ
+                            }),
+                          });
+
+                          if (!response.ok) {
+                            throw new Error('Failed to create instance');
+                          }
+
+                          const newInstance = await response.json();
+                          setOpenHandsInstances([...openHandsInstances, newInstance]);
+                        } catch (error) {
+                          console.error('Failed to create instance:', error);
+                          alert('インスタンスの作成に失敗しました');
+                        } finally {
+                          setIsLoading(false);
+                        }
+                      }}
+                      disabled={isLoading}
                       className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     >
                       <PlusIcon className="-ml-0.5 mr-1.5 h-5 w-5" />
-                      インスタンスを作成
-                    </Link>
+                      {isLoading ? '作成中...' : 'インスタンスを作成'}
+                    </button>
                   </div>
                 </div>
               </div>
