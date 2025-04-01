@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(cuid())
+  email         String        @unique
+  name          String?
+  awsAccountId  String?       @unique
+  credits       Credit[]
+  awsAccounts   AWSAccount[]
+  instances     Instance[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model Credit {
+  id          String    @id @default(cuid())
+  userId      String
+  amount      Float
+  type        String    // "initial", "purchase", "usage"
+  description String?
+  user        User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model AWSAccount {
+  id            String     @id @default(cuid())
+  userId        String
+  awsAccountId  String     @unique
+  accountName   String
+  status        String     // "creating", "active", "suspended"
+  instances     Instance[]
+  user          User       @relation(fields: [userId], references: [id])
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
+
+model Instance {
+  id            String     @id @default(cuid())
+  userId        String
+  awsAccountId  String
+  instanceId    String
+  instanceType  String
+  status        String     // "pending", "running", "stopped", "terminated"
+  region        String
+  user          User       @relation(fields: [userId], references: [id])
+  awsAccount    AWSAccount @relation(fields: [awsAccountId], references: [id])
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+}
