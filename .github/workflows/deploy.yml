@@ -2,11 +2,7 @@ name: Deploy
 on:
   push:
     branches:
-      - main
-      - release
-  pull_request:
-    branches:
-      - main
+      - master
       - release
 
 jobs:
@@ -30,6 +26,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run: |
           npx vercel deploy --token PObfDhj5Ybd3wGTF7yWLsarx --yes --prod --scope yukihamadas-projects --build-env NEXT_PUBLIC_ENV=preview
+          npx vercel alias set $(npx vercel ls --token PObfDhj5Ybd3wGTF7yWLsarx --scope yukihamadas-projects -m 1 | grep -m 1 "https://" | awk '{print $2}') test.teai.io --token PObfDhj5Ybd3wGTF7yWLsarx --scope yukihamadas-projects
 
       - name: Deploy to Production
         if: github.ref == 'refs/heads/release'
