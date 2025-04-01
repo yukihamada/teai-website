@@ -1,17 +1,19 @@
 {
   "version": 2,
+  "framework": "nextjs",
   "buildCommand": "npm run build",
   "devCommand": "npm run dev",
   "installCommand": "npm install",
-  "framework": "nextjs",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/next"
-    }
-  ],
+  "outputDirectory": ".next",
+  "public": true,
+  "regions": ["hnd1"],
   "env": {
     "NEXT_PUBLIC_BASE_URL": "https://teai.io",
     "NODE_ENV": "production"
+  },
+  "build": {
+    "env": {
+      "NEXT_PUBLIC_BASE_URL": "https://teai.io"
+    }
   }
 }
