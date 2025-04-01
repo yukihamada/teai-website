@@ -3,55 +3,48 @@
 export function Logo() {
   return (
     <svg
-      className="h-8 w-auto text-indigo-600 dark:text-indigo-400"
-      viewBox="0 0 120 32"
-      fill="none"
+      className="h-8 w-auto"
+      viewBox="0 0 250 100"
       xmlns="http://www.w3.org/2000/svg"
     >
       <path
-        d="M8 8c0-2.21 1.79-4 4-4h12c2.21 0 4 1.79 4 4v16c0 2.21-1.79 4-4 4H12c-2.21 0-4-1.79-4-4V8z"
-        stroke="currentColor"
-        strokeWidth="2"
+        d="M20 60 C40 50, 60 50, 70 60 C80 70, 70 80, 50 85 C40 87, 30 90, 35 100 C40 110, 60 105, 90 95"
+        stroke="#00CC99"
+        strokeWidth="8"
+        fill="none"
         strokeLinecap="round"
         strokeLinejoin="round"
+        style={{ strokeDasharray: '0.1,0' }}
       />
-      <path
-        d="M16 12v8M12 16h8"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M40 24V8l8 16V8"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M60 24V8h8v16h-8z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M80 8v16l8-8-8-8z"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <circle
-        cx="104"
-        cy="16"
-        r="8"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      
+      <defs>
+        <linearGradient id="greenBlueGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor="#00CC99" />
+          <stop offset="100%" stopColor="#3498DB" />
+        </linearGradient>
+      </defs>
+      
+      <text
+        x="100"
+        y="80"
+        fontFamily="Arial, sans-serif"
+        fontWeight="700"
+        fontSize="35"
+        fill="url(#greenBlueGradient)"
+      >
+        TeAI
+      </text>
+      <text
+        x="180"
+        y="80"
+        fontFamily="Arial, sans-serif"
+        fontWeight="700"
+        fontSize="35"
+        fill="#95A5A6"
+        className="dark:fill-gray-400"
+      >
+        .io
+      </text>
     </svg>
   );
 }
