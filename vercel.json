@@ -15,5 +15,9 @@
     "env": {
       "NEXT_PUBLIC_BASE_URL": "https://teai.io"
     }
+  },
+  "github": {
+    "enabled": true,
+    "silent": true
   }
 }
